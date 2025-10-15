@@ -23,12 +23,34 @@ class MovieHorizontalListView extends StatefulWidget {
 }
 
 class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    scrollController.addListener(() {
+      if (widget.loadNextPage == null) return;
+
+      if (scrollController.position.pixels + 200 >=
+          scrollController.position.maxScrollExtent) {
+        widget.loadNextPage?.call();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return _ListItem(
       title: "Cinema",
       subTitle: "Monday 20th",
       movies: widget.movies,
+      scrollController: scrollController,
     );
   }
 }
@@ -37,8 +59,14 @@ class _ListItem extends StatelessWidget {
   final String? title;
   final String? subTitle;
   final List<Movie> movies;
+  final ScrollController scrollController;
 
-  const _ListItem({this.title, this.subTitle, required this.movies});
+  const _ListItem({
+    this.title,
+    this.subTitle,
+    required this.movies,
+    required this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +79,7 @@ class _ListItem extends StatelessWidget {
 
           Expanded(
             child: ListView.builder(
+              controller: scrollController,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => _Slide(movie: movies[index]),
               itemCount: movies.length,

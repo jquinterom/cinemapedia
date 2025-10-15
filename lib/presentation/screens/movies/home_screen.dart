@@ -35,21 +35,67 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   Widget build(BuildContext context) {
     final slideshowMovies = ref.watch(moviesSlideshowProvider);
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
 
     if (slideshowMovies.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Column(
-      children: [
-        CustomAppbar(),
+    return CustomScrollView(
+      slivers: [
+        const SliverAppBar(
+          floating: true,
+          automaticallyImplyLeading: false,
+          flexibleSpace: FlexibleSpaceBar(title: CustomAppbar()),
+        ),
 
-        MoviesSlideshow(movies: slideshowMovies),
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            return Column(
+              children: [
+                // CustomAppbar(),
+                MoviesSlideshow(movies: slideshowMovies),
 
-        MovieHorizontalListView(
-          movies: slideshowMovies,
-          title: "Cinema",
-          subTitle: "Monday 20th",
+                MovieHorizontalListView(
+                  movies: nowPlayingMovies,
+                  title: "Cinema",
+                  subTitle: "Monday 20th",
+                  loadNextPage: () => ref
+                      .read(nowPlayingMoviesProvider.notifier)
+                      .loadNextPage(),
+                ),
+
+                MovieHorizontalListView(
+                  movies: nowPlayingMovies,
+                  title: "En Cines",
+                  subTitle: "Próximamente",
+                  loadNextPage: () => ref
+                      .read(nowPlayingMoviesProvider.notifier)
+                      .loadNextPage(),
+                ),
+
+                MovieHorizontalListView(
+                  movies: nowPlayingMovies,
+                  title: "Cinema",
+                  subTitle: "Monday 20th",
+                  loadNextPage: () => ref
+                      .read(nowPlayingMoviesProvider.notifier)
+                      .loadNextPage(),
+                ),
+
+                MovieHorizontalListView(
+                  movies: nowPlayingMovies,
+                  title: "Cinema",
+                  subTitle: "Monday 20th",
+                  loadNextPage: () => ref
+                      .read(nowPlayingMoviesProvider.notifier)
+                      .loadNextPage(),
+                ),
+
+                SizedBox(height: 8),
+              ],
+            );
+          }, childCount: 1),
         ),
       ],
     );
