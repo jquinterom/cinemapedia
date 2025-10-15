@@ -47,8 +47,8 @@ class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
   @override
   Widget build(BuildContext context) {
     return _ListItem(
-      title: "Cinema",
-      subTitle: "Monday 20th",
+      title: widget.title,
+      subTitle: widget.subTitle,
       movies: widget.movies,
       scrollController: scrollController,
     );

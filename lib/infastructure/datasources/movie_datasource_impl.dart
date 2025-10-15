@@ -6,6 +6,8 @@ import 'package:cinemapedia/infastructure/models/moviedb/moviedb_response.dart';
 import 'package:dio/dio.dart';
 
 class MoviesDataSourceImpl extends MoviesDataSource {
+  final movieUrl = "/movie/";
+
   final dio = Dio(
     BaseOptions(
       baseUrl: Environment.movieApiUrl,
@@ -16,6 +18,17 @@ class MoviesDataSourceImpl extends MoviesDataSource {
     ),
   );
 
+  List<Movie> _jsonToMovies(Map<String, dynamic> json) {
+    final movieDBResponse = MovieDbResponse.fromJson(json);
+
+    final List<Movie> movies = movieDBResponse.results
+        .where((movieDb) => movieDb.posterPath != 'no-poster')
+        .map((movieDb) => MovieMapper.movieDbToEntity(movieDb))
+        .toList();
+
+    return movies;
+  }
+
   @override
   Future<List<Movie>> getNowPlaying({int page = 1}) async {
     final response = await dio.get(
@@ -23,13 +36,42 @@ class MoviesDataSourceImpl extends MoviesDataSource {
       queryParameters: {'page': page},
     );
 
-    final movieDBResponse = MovieDbResponse.fromJson(response.data);
+    final movies = _jsonToMovies(response.data);
 
-    final List<Movie> movies = movieDBResponse.results
-        .where((movieDb) => movieDb.posterPath != 'no-poster')
-        .map((movieDb) => MovieMapper.movieDbToEntity(movieDb))
-        .toList();
+    return Future.value(movies);
+  }
 
+  @override
+  Future<List<Movie>> getPopular({int page = 1}) async {
+    final response = await dio.get(
+      '/movie/popular',
+      queryParameters: {'page': page},
+    );
+
+    final movies = _jsonToMovies(response.data);
+
+    return Future.value(movies);
+  }
+
+  @override
+  Future<List<Movie>> getUpComing({int page = 1}) async {
+    final response = await dio.get(
+      '${movieUrl}upcoming',
+      queryParameters: {'page': page},
+    );
+
+    final movies = _jsonToMovies(response.data);
+    return Future.value(movies);
+  }
+
+  @override
+  Future<List<Movie>> getTopRated({int page = 1}) async {
+    final response = await dio.get(
+      '${movieUrl}top_rated',
+      queryParameters: {'page': page},
+    );
+
+    final movies = _jsonToMovies(response.data);
     return Future.value(movies);
   }
 }
