@@ -81,7 +81,8 @@ class _ListItem extends StatelessWidget {
             child: ListView.builder(
               controller: scrollController,
               scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => _Slide(movie: movies[index]),
+              itemBuilder: (context, index) =>
+                  FadeInRight(child: _Slide(movie: movies[index])),
               itemCount: movies.length,
               physics: const BouncingScrollPhysics(),
             ),

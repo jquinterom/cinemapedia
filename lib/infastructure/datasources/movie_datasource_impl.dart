@@ -32,7 +32,7 @@ class MoviesDataSourceImpl extends MoviesDataSource {
   @override
   Future<List<Movie>> getNowPlaying({int page = 1}) async {
     final response = await dio.get(
-      '/movie/now_playing',
+      '${movieUrl}now_playing',
       queryParameters: {'page': page},
     );
 
@@ -44,7 +44,7 @@ class MoviesDataSourceImpl extends MoviesDataSource {
   @override
   Future<List<Movie>> getPopular({int page = 1}) async {
     final response = await dio.get(
-      '/movie/popular',
+      '${movieUrl}popular',
       queryParameters: {'page': page},
     );
 
