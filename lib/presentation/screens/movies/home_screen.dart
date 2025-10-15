@@ -10,7 +10,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _HomeView());
+    return Scaffold(
+      body: _HomeView(),
+      bottomNavigationBar: CustomBottomNavigation(),
+    );
   }
 }
 
@@ -42,6 +45,12 @@ class _HomeViewState extends ConsumerState<_HomeView> {
         CustomAppbar(),
 
         MoviesSlideshow(movies: slideshowMovies),
+
+        MovieHorizontalListView(
+          movies: slideshowMovies,
+          title: "Cinema",
+          subTitle: "Monday 20th",
+        ),
       ],
     );
   }
