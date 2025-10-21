@@ -2,6 +2,7 @@ import 'package:cinemapedia/config/constants/enviroment.dart';
 import 'package:cinemapedia/domain/datasources/movies_datasource.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/infastructure/mappers/movie_mapper.dart';
+import 'package:cinemapedia/infastructure/models/moviedb/movie_details.dart';
 import 'package:cinemapedia/infastructure/models/moviedb/moviedb_response.dart';
 import 'package:dio/dio.dart';
 
@@ -73,5 +74,20 @@ class MoviesDataSourceImpl extends MoviesDataSource {
 
     final movies = _jsonToMovies(response.data);
     return Future.value(movies);
+  }
+
+  @override
+  Future<Movie> getMovieById(int id) async {
+    final response = await dio.get('$movieUrl$id');
+
+    if (response.statusCode != 200) {
+      throw Exception('Error getting movie with id: $id');
+    }
+
+    final movieDetails = MovieDetails.fromJson(response.data);
+
+    final movie = MovieMapper.movieDetailsToEntity(movieDetails);
+
+    return Future.value(movie);
   }
 }
