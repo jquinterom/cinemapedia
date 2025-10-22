@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
@@ -84,7 +85,17 @@ class _FlexibleSpaceBar extends StatelessWidget {
       background: Stack(
         children: [
           SizedBox.expand(
-            child: Image.network(movie.posterPath, fit: BoxFit.cover),
+            child: Image.network(
+              movie.posterPath,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress != null) {
+                  return SizedBox();
+                }
+
+                return FadeIn(child: child);
+              },
+            ),
           ),
 
           SizedBox.expand(
@@ -212,13 +223,15 @@ class _ActorsByMovie extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Image.network(
-                    actor.profilePath,
-                    width: 135,
-                    height: 180,
-                    fit: BoxFit.cover,
+                ZoomIn(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.network(
+                      actor.profilePath,
+                      width: 135,
+                      height: 180,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
 
