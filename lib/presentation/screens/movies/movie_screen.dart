@@ -1,5 +1,6 @@
+import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
-import 'package:cinemapedia/presentation/providers/movies/movie_details_provider.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,11 +21,13 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     super.initState();
 
     ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
+    ref.read(actorsMovieProvider.notifier).loadActors(widget.movieId);
   }
 
   @override
   Widget build(BuildContext context) {
     final Movie? movie = ref.watch(movieInfoProvider)[widget.movieId];
+    final actors = ref.watch(actorsMovieProvider)[widget.movieId];
 
     if (movie == null) {
       return Scaffold(
@@ -39,7 +42,8 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
           _CustomSliversAppBar(movie: movie),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, index) => _MovieDetails(movie: movie),
+              (context, index) =>
+                  _MovieDetails(movie: movie, actors: actors ?? []),
               childCount: 1,
             ),
           ),
@@ -76,11 +80,6 @@ class _FlexibleSpaceBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlexibleSpaceBar(
       titlePadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      title: Text(
-        movie.title,
-        style: const TextStyle(color: Colors.white, fontSize: 20),
-        textAlign: TextAlign.start,
-      ),
 
       background: Stack(
         children: [
@@ -120,8 +119,9 @@ class _FlexibleSpaceBar extends StatelessWidget {
 
 class _MovieDetails extends StatelessWidget {
   final Movie movie;
+  final List<Actor> actors;
 
-  const _MovieDetails({required this.movie});
+  const _MovieDetails({required this.movie, required this.actors});
 
   @override
   Widget build(BuildContext context) {
@@ -180,9 +180,65 @@ class _MovieDetails extends StatelessWidget {
           ),
         ),
 
-        // TODO: Show character list
-        SizedBox(height: 100),
+        _ActorsByMovie(actors: actors),
+
+        SizedBox(height: 48),
       ],
+    );
+  }
+}
+
+class _ActorsByMovie extends StatelessWidget {
+  final List<Actor> actors;
+
+  const _ActorsByMovie({required this.actors});
+
+  @override
+  Widget build(BuildContext context) {
+    if (actors.isEmpty) return const CircularProgressIndicator(strokeWidth: 2);
+
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: actors.length,
+        // shrinkWrap: true,
+        // physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final actor = actors[index];
+          return Container(
+            padding: const EdgeInsets.all(8),
+            width: 135,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Image.network(
+                    actor.profilePath,
+                    width: 135,
+                    height: 180,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(actor.name, maxLines: 2),
+
+                Text(
+                  actor.character ?? '',
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
