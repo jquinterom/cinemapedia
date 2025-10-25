@@ -98,6 +98,8 @@ class MoviesDataSourceImpl extends MoviesDataSource {
       queryParameters: {'query': query},
     );
 
-    return Future.value(response.data);
+    final movies = _jsonToMovies(response.data);
+
+    return Future.value(movies);
   }
 }
