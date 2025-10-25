@@ -18,7 +18,7 @@ class MovieMapper {
       popularity: movieDb.popularity,
       posterPath: movieDb.posterPath != ''
           ? Environment.movieImageApiUrl + movieDb.posterPath
-          : 'no-poster',
+          : 'https://www.burgkino.at/sites/default/files/styles/movie_poster_teaser/public/default_images/poster-default.png',
       releaseDate: movieDb.releaseDate,
       title: movieDb.title,
       video: movieDb.video,

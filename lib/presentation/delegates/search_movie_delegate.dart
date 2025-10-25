@@ -54,11 +54,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
         return ListView.builder(
           itemCount: movies.length,
-          itemBuilder: (context, index) {
-            final movie = movies[index];
-
-            return ListTile(title: Text(movie.title));
-          },
+          itemBuilder: (context, index) => _MovieItem(movie: movies[index]),
         );
       },
     );
@@ -69,10 +65,44 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 }
 
 class _MovieItem extends StatelessWidget {
-  const _MovieItem();
+  final Movie movie;
+  const _MovieItem({required this.movie});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final textStyles = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: size.width * 0.2,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.network(
+                movie.posterPath,
+                loadingBuilder: (context, child, loadingProgress) =>
+                    FadeIn(child: child),
+              ),
+            ),
+          ),
+
+          SizedBox(width: 8),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(movie.title, style: textStyles.titleMedium),
+                const SizedBox(height: 4),
+                Text(movie.overview, style: textStyles.bodySmall),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
