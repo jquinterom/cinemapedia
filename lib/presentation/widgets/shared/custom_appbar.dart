@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/router/app_router.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/delegates/search_movie_delegate.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
@@ -50,7 +51,7 @@ class CustomAppbar extends ConsumerWidget {
 
                   if (!context.mounted) return;
 
-                  context.push('/movie/${movie.id}');
+                  context.push('$initialRoute/movie/${movie.id}');
                 },
                 icon: Icon(Icons.search),
               ),

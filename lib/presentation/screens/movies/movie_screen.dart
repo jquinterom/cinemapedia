@@ -68,6 +68,13 @@ class _CustomSliversAppBar extends StatelessWidget {
       foregroundColor: Colors.white,
       shadowColor: Colors.red,
       flexibleSpace: _FlexibleSpaceBar(movie: movie),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.favorite_rounded, color: Colors.red),
+          // icon: const Icon(Icons.favorite_outline_rounded),
+        ),
+      ],
     );
   }
 }
@@ -98,31 +105,50 @@ class _FlexibleSpaceBar extends StatelessWidget {
             ),
           ),
 
-          SizedBox.expand(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [.7, 1.0],
-                  colors: [Colors.transparent, Colors.black87],
-                ),
-              ),
-            ),
+          _CustomGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.transparent, Colors.black87],
           ),
 
-          SizedBox.expand(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  stops: [0.0, .3],
-                  colors: [Colors.black87, Colors.transparent],
-                ),
-              ),
-            ),
+          _CustomGradient(begin: Alignment.topLeft, stops: [.0, .3]),
+
+          _CustomGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            stops: [.0, .3],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  final List<double> stops;
+  final List<Color> colors;
+  final AlignmentGeometry begin;
+  final AlignmentGeometry end;
+
+  const _CustomGradient({
+    this.stops = const [.7, 1.0],
+    this.colors = const [Colors.black87, Colors.transparent],
+    this.begin = Alignment.topLeft,
+    this.end = Alignment.centerRight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: begin,
+            end: end,
+            stops: stops,
+            colors: colors,
+          ),
+        ),
       ),
     );
   }
