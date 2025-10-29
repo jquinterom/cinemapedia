@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:cinemapedia/presentation/providers/storage/is_favorite_movie_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -54,25 +55,37 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   }
 }
 
-class _CustomSliversAppBar extends StatelessWidget {
+class _CustomSliversAppBar extends ConsumerWidget {
   final Movie movie;
   const _CustomSliversAppBar({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
+    final isMovieFavoriteFuture = ref.watch(isFavoriteMovieProvider(movie.id));
 
     return SliverAppBar(
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
-      shadowColor: Colors.red,
       flexibleSpace: _FlexibleSpaceBar(movie: movie),
       actions: [
         IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.favorite_rounded, color: Colors.red),
-          // icon: const Icon(Icons.favorite_outline_rounded),
+          onPressed: () async {
+            await ref
+                .read(favoriteMoviesProvider.notifier)
+                .toggleFavoriteMovie(movie);
+
+            ref.invalidate(isFavoriteMovieProvider(movie.id));
+          },
+          icon: isMovieFavoriteFuture.when(
+            data: (isFavorite) => isFavorite
+                ? const Icon(Icons.favorite, color: Colors.red)
+                : const Icon(Icons.favorite_outline_rounded),
+            error: (_, __) =>
+                throw Exception("Error validating favorite status"),
+            loading: () => const CircularProgressIndicator(strokeWidth: 2),
+          ),
         ),
       ],
     );

@@ -1,3 +1,5 @@
+import 'package:cinemapedia/config/database/database.dart';
+
 class Movie {
   final bool adult;
   final String backdropPath;
@@ -30,4 +32,23 @@ class Movie {
     required this.voteAverage,
     required this.voteCount,
   });
+
+  factory Movie.fromDriftDb(FavoriteMovy favoriteMovy) {
+    return Movie(
+      adult: false,
+      backdropPath: favoriteMovy.backdropPath,
+      genreIds: const [],
+      id: favoriteMovy.id,
+      originalLanguage: '',
+      originalTitle: favoriteMovy.originalTitle,
+      overview: '',
+      popularity: 0,
+      posterPath: favoriteMovy.posterPath,
+      releaseDate: DateTime.now(),
+      title: favoriteMovy.title,
+      video: false,
+      voteAverage: favoriteMovy.voteAverage,
+      voteCount: 0,
+    );
+  }
 }
