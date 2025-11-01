@@ -21,6 +21,29 @@ class _FavoritesViewState extends ConsumerState<FavoritesView> {
   Widget build(BuildContext context) {
     final favoriteMovies = ref.watch(favoriteMoviesProvider);
     final movieList = favoriteMovies.values.toList();
+    final colorPrimary = Theme.of(context).colorScheme.primary;
+
+    if (movieList.isEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.favorite_border_rounded,
+                color: colorPrimary,
+                size: 100,
+              ),
+
+              Text(
+                'You have no favorite movies yet',
+                style: TextStyle(color: colorPrimary, fontSize: 20),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       body: MovieMasonry(
