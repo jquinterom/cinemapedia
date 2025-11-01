@@ -18,7 +18,7 @@ class LocalStorageRepositoryImpl extends LocalStorageRepository {
   }
 
   @override
-  Future<List<Movie>> loadFavoriteMovies({int limit = 10, int offset = 0}) {
+  Future<List<Movie>> loadFavoriteMovies({int limit = 15, int offset = 0}) {
     return dataSource.loadFavoriteMovies(limit: limit, offset: offset);
   }
 }

@@ -21,7 +21,7 @@ class DriftDataSourceImpl extends LocalStorageDataSource {
 
   @override
   Future<List<Movie>> loadFavoriteMovies({
-    int limit = 10,
+    int limit = 15,
     int offset = 0,
   }) async {
     final query = database.select(database.favoriteMovies)
