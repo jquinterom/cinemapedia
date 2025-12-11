@@ -5,7 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class MovieMasonry extends StatefulWidget {
   final List<Movie> movies;
-  final Future<List<Movie>> Function()? loadNextPage;
+  final Future<void> Function()? loadNextPage;
 
   const MovieMasonry({super.key, required this.movies, this.loadNextPage});
 
@@ -36,14 +36,9 @@ class _MovieMasonryState extends State<MovieMasonry> {
     if (widget.loadNextPage == null) return;
     isLoading = true;
 
-    // final movies = await widget.loadNextPage!();
-    final movies = await widget.loadNextPage?.call() ?? [];
+    await widget.loadNextPage?.call();
 
     isLoading = false;
-
-    if (movies.isEmpty) {
-      isLastPage = true;
-    }
   }
 
   @override

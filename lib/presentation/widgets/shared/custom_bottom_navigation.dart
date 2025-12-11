@@ -17,13 +17,16 @@ class CustomBottomNavigation extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       elevation: 0.0,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_max), label: 'Home'),
         BottomNavigationBarItem(
-          icon: Icon(Icons.movie_outlined),
-          label: 'Categories',
+          icon: Icon(Icons.home_max_outlined),
+          label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
+          icon: Icon(Icons.thumbs_up_down_outlined),
+          label: 'Popular',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite_outline),
           label: 'Favorites',
         ),
       ],
