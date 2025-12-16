@@ -17,7 +17,6 @@ class HomeViewState extends ConsumerState<HomeView> {
     super.initState();
 
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-    ref.read(popularMoviesProvider.notifier).loadNextPage();
     ref.read(upcomingMoviesProvider.notifier).loadNextPage();
     ref.read(topRatedMoviesProvider.notifier).loadNextPage();
   }
@@ -30,7 +29,6 @@ class HomeViewState extends ConsumerState<HomeView> {
 
     final slideshowMovies = ref.watch(moviesSlideshowProvider);
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
-    final popularMovies = ref.watch(popularMoviesProvider);
     final upcomingMovies = ref.watch(upcomingMoviesProvider);
     final topRatedMovies = ref.watch(topRatedMoviesProvider);
 
@@ -48,7 +46,6 @@ class HomeViewState extends ConsumerState<HomeView> {
             delegate: SliverChildBuilderDelegate((context, index) {
               return Column(
                 children: [
-                  // CustomAppbar(),
                   MoviesSlideshow(movies: slideshowMovies),
 
                   MovieHorizontalListView(
@@ -67,13 +64,6 @@ class HomeViewState extends ConsumerState<HomeView> {
                     loadNextPage: () => ref
                         .read(upcomingMoviesProvider.notifier)
                         .loadNextPage(),
-                  ),
-
-                  MovieHorizontalListView(
-                    movies: popularMovies,
-                    title: "Popular",
-                    loadNextPage: () =>
-                        ref.read(popularMoviesProvider.notifier).loadNextPage(),
                   ),
 
                   MovieHorizontalListView(
