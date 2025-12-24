@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cinemapedia/config/database/database.dart';
 import 'package:flutter/material.dart';
 
@@ -5,6 +7,8 @@ import 'package:cinemapedia/config/router/app_router.dart';
 import 'package:cinemapedia/config/theme/app_theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +35,8 @@ Future<void> main() async {
   print('items in database: $allItems');
 
   runApp(const ProviderScope(child: MainApp()));
+
+  await initializeRevenueCat();
 }
 
 class MainApp extends StatelessWidget {
@@ -44,4 +50,24 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
     );
   }
+}
+
+Future<void> initializeRevenueCat() async {
+  await Purchases.setLogLevel(LogLevel.debug);
+
+  PurchasesConfiguration? configuration;
+
+  if (Platform.isIOS) {
+    // configuration = PurchasesConfiguration();
+  } else if (Platform.isAndroid) {
+    configuration = PurchasesConfiguration("");
+  }
+
+  if (configuration != null) {
+    await Purchases.configure(configuration);
+  }
+
+  final payWallResult = await RevenueCatUI.presentPaywallIfNeeded("premium");
+
+  debugPrint("Paywall result: $payWallResult");
 }
